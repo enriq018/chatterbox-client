@@ -12,30 +12,13 @@ $( document ).ready(function() {
 
   
   app.init = function () {
-    app.rooms.push(test.rooms[0], test.rooms[1]);
-    app.message.push(test.message[0], test.message[1]);
-    app.user = test.user;
-    
     
     for (var i = 0; i < app.rooms.length; i++ ) {
       var room = `<button class="roomButton">${app.rooms[i]}</button>`;
       $('.roomSelector').append(room);
     }
-    
-    
-    for (var i = 0; i < app.message.length; i++ ) {
-      console.log('msg========', app.message[i]);
-      var msg = `
-            <div class = 'msg'>
-              <span class = 'user'> 
-                ${'username'} </span>
-                ${app.message[i]} 
-            </div>`;
-      
-      $('.messageHolder').append(msg);
-    }
   };
-        
+  app.init();    
   // createdAt : "2017-02-08T21:34:13.056Z"
   // objectId : "6fXHtbOuf5" ,
   // roomname : "lobby" ,
@@ -64,19 +47,17 @@ $( document ).ready(function() {
   };
   var chatData;
   app.fetch = function() {
-
-    
     $.ajax({
       url: 'http://parse.sfs.hackreactor.com/chatterbox/classes/messages',
       type: 'GET',
-      data: {order:'-createdAt'},
+      data: {order: '-createdAt'},
       contentType: 'application/json',
       success: function(data) {
         console.log('chatterbox: Message sent', data);
         chatData = data;
         var arr = data.results;
         
-        for (var i = 0; i < 20; i++ ) {
+        for (var i = 0; i < 10; i++ ) {
           var msg = `
             <div class = 'msg'>
               <span class = 'user'> 
@@ -85,9 +66,6 @@ $( document ).ready(function() {
             </div>`;
           $('.messageHolder').append(msg);
         }
-        
-        
-        
       },
       error: function(data) {
         console.error('chatterbox: Failed to send message', data);
@@ -96,10 +74,8 @@ $( document ).ready(function() {
     
   };
 
-
+  app.fetch();
   $('.roomSelector').on('click', '.newRoom', function() {
-    console.log('444444444444444444444444444444', chatData);
-    console.log(app.user);
     var newRoom = prompt('What is the name of the new room?');
     var room = `<button class="roomButton">${newRoom}</button>`;
     $('.roomSelector').append(room); 
@@ -108,11 +84,10 @@ $( document ).ready(function() {
     console.log(app.rooms);
   });
   
-  $('.roomSelector').on('click', '.roomButton', function(){
+  $('.roomSelector').on('click', '.roomButton', function() {
     //when a button is clicked, it returns a room name
     //this roomname is passed into the fetch function 
     //the fetch will grab the recent chat msgs and filter/append only matchting roomnames 
-    console.log('clicked', $(this).text());
     app.fetch($(this).text());
     
   });
@@ -120,9 +95,7 @@ $( document ).ready(function() {
   $('.submit').on('click', function() {
     var message = (document.getElementById('messageText').value);
     app.send('lobby', message, app.user);
-  });
-  
-
-  
+    document.getElementById('messageText').value = '';
+  }); 
 
 });
