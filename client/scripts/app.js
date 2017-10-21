@@ -19,7 +19,7 @@ $( document ).ready(function() {
     
     
     for (var i = 0; i < app.rooms.length; i++ ) {
-      var room = `<button class="${app.rooms[i]}">${app.rooms[i]}</button>`;
+      var room = `<button class="roomButton">${app.rooms[i]}</button>`;
       $('.roomSelector').append(room);
     }
     
@@ -47,13 +47,20 @@ $( document ).ready(function() {
 
 
   $('.roomSelector').on('click', '.newRoom', function() {
+    console.log(app.user);
     var newRoom = prompt('What is the name of the new room?');
-    var room = `<button class="${newRoom}">${newRoom}</button>`;
+    var room = `<button class="roomButton">${newRoom}</button>`;
     $('.roomSelector').append(room); 
     $('.null').remove();
     app.rooms.push(newRoom);
     console.log(app.rooms)
   });
+  
+  $('.roomSelector').on('click', '.roomButton', function(){
+    console.log('clicked', $(this).text());
+    
+  })
+  
 
   
 
