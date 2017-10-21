@@ -6,12 +6,13 @@
 // username : "fredx"
 
 var app = {
+  server: 'http://parse.sfs.hackreactor.com/chatterbox/classes/messages',
   rooms: ['lobby'],
   friends: [],
   currentRoom: 'lobby',
   user: window.location.href.split('=')[1]
 };
-
+app.renderMessage = function(){};
 app.clearMessages = function () {
   $('.messageHolder *').remove();
 };
@@ -29,14 +30,15 @@ $( document ).ready(function() {
         console.log('chatterbox: Message sent', data);
         chatData = data;
         var arr = data.results;
-        
         for (var i = 0; i < 100; i++ ) {
+          var safeMsg = xssEscape(arr[i].text);
+          var safeFriend = xssEscape(arr[i].username);
           if (arr[i].roomname === 'lobby') {
             var msg = `
             <div class = 'msg'>
-              <span class = '${arr[i].username}'> 
-                Username:${arr[i].username} </span>
-                ${arr[i].text} 
+              <span class = '${safeFriend}'> 
+                Username:${safeFriend} </span>
+                ${safeMsg} 
             </div>`;
             $('.messageHolder').append(msg);
           }
@@ -77,7 +79,7 @@ $( document ).ready(function() {
     $.ajax({
       url: 'http://parse.sfs.hackreactor.com/chatterbox/classes/messages',
       type: 'GET',
-      //data: {order: '-createdAt'},
+      data: {order: '-createdAt'},
       contentType: 'application/json',
       success: function(data) {
         console.log('chatterbox: Message sent', data);
@@ -87,14 +89,28 @@ $( document ).ready(function() {
         var arr = data.results;
         
         for (var i = 0; i < 100; i++ ) {
-          console.log('roomName:', arr[i].roomname);
+          var safeMsg = xssEscape(arr[i].text);
+          var safeFriend = xssEscape(arr[i].username);
           if (arr[i].roomname === roomName) {
             var msg = `
             <div class = 'msg'>
               <span class = 'userName'> 
-                ${arr[i].username}: </span>
-                ${arr[i].text}, ${arr[i].createdAt}
+                ${safeFriend}: </span>
+                ${safeMsg}, ${arr[i].createdAt}
             </div>`;
+            if (app.friends.includes(arr[i].username)) {
+              msg = `
+            <div class = 'msg'>
+              <span class = 'friends'> 
+                ${safeFriend}: </span>
+                ${safeMsg}, ${arr[i].createdAt}
+            </div>`;
+
+              
+            }
+
+            
+              console.log(msg)
             $('.messageHolder').append(msg);
           }
         }
@@ -123,7 +139,8 @@ $( document ).ready(function() {
   
   $('.submit').on('click', function() {
     var message = (document.getElementById('messageText').value);
-    app.send(app.currentRoom, message, app.user);
+    var safeMessage = xssEscape(message);
+    app.send(app.currentRoom, safeMessage, app.user);
     document.getElementById('messageText').value = '';
   }); 
   
@@ -131,9 +148,10 @@ $( document ).ready(function() {
     var user = ($(this).text().trim().split(':')[0]);
     if (!app.friends.includes(user)) {
       app.friends.push(user);
+      app.fetch(app.currentRoom);
         
     }
-     console.log(app.friends)
+    
   });
   
   app.fetch('lobby');

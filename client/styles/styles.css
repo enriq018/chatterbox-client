@@ -13,6 +13,8 @@ body {
     padding: 50px 60px;
     border: solid #ddd;
     border-width: 0 1px 1px 1px;
+        text-align: center;
+
 }
 
 #main h1 {
@@ -20,8 +22,12 @@ body {
     font-size: 35px;
     margin-bottom: 5px;
     padding: 5px;
+    text-align: center;
 }
+h3 {
+        text-align: center;
 
+}
 #main h1 span {
     font-style:italic;
 }
@@ -59,6 +65,25 @@ form input[type=text] {
     padding: 5px;
 }
 
+button {
+    background-color: #008CBA; /* Green */
+    border-style: solid;
+    border:black;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
 .chat {
     padding: 5px;
     margin-bottom: 5px;
@@ -94,12 +119,26 @@ form input[type=text] {
 
 .msg {
     padding: 10px;
+    margin: 5px;
+    border-style: solid;
+    background-color: #ddffff;
+    
 }
 
 .userName {
     color: blue;
+    font-size: 125%;
+    
+    
 }
 .userName:hover {
     cursor: pointer;
+    font-size: 125%;
+}
+
+.friends {
+    font-weight: Bold;
+    font-size: 125%;
+    color: blue;
 }
 
