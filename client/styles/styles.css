@@ -89,6 +89,17 @@ form input[type=text] {
 }
 
 .rooms {
-    padding: 10px
+    padding: 10px;
+}
+
+.msg {
+    padding: 10px;
+}
+
+.userName {
+    color: blue;
+}
+.userName:hover {
+    cursor: pointer;
 }
 
