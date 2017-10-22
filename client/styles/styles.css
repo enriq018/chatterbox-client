@@ -123,11 +123,13 @@ button:hover {
     border-style: solid;
     background-color: #ddffff;
     
+    
 }
 
 .userName {
     color: blue;
     font-size: 125%;
+    
     
     
 }
@@ -142,3 +144,8 @@ button:hover {
     color: blue;
 }
 
+.time {
+    font-size: 75%;
+    float: right;
+    vertical-align: bottom;
+}

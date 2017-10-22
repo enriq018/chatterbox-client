@@ -33,22 +33,33 @@ $( document ).ready(function() {
         for (var i = 0; i < 100; i++ ) {
           var safeMsg = xssEscape(arr[i].text);
           var safeFriend = xssEscape(arr[i].username);
+          var zulu = arr[i].createdAt.split('T')[0] + ' ' + arr[i].createdAt.split('T')[1].split('.')[0] + ' UTC';
+          var time = new Date(zulu).toString().split('G')[0];
+          var safeRoom = xssEscape(arr[i].roomname);
+          if (safeRoom && !app.rooms.includes(safeRoom)) {
+            app.rooms.push(safeRoom);
+            var room = `<button class="roomButton">${safeRoom}</button>`;
+            $('.roomSelector').append(room);
+          }
           if (arr[i].roomname === 'lobby') {
-            var msg = `
+               var msg = `
             <div class = 'msg'>
-              <span class = '${safeFriend}'> 
-                Username:${safeFriend} </span>
-                ${safeMsg} 
+              <span class = 'userName'> 
+                ${safeFriend}: </span>
+                ${safeMsg} <span class = 'time'>${time}</span>
+            </div>`;
+            if (app.friends.includes(arr[i].username)) {
+              msg = `
+            <div class = 'msg'>
+              <span class = 'friends'> 
+                ${safeFriend}: </span>
+                ${safeMsg} <span class = 'time'>Sent at: ${time}</span>
             </div>`;
             $('.messageHolder').append(msg);
           }
-          if (arr[i].roomname && !app.rooms.includes(arr[i].roomname)) {
-            app.rooms.push(arr[i].roomname);
-            var room = `<button class="roomButton">${arr[i].roomname}</button>`;
-            $('.roomSelector').append(room);
-          }
         }
-      },
+      }
+    },
       error: function(data) {
         console.error('chatterbox: Failed to send message', data);
       }
@@ -91,26 +102,28 @@ $( document ).ready(function() {
         for (var i = 0; i < 100; i++ ) {
           var safeMsg = xssEscape(arr[i].text);
           var safeFriend = xssEscape(arr[i].username);
+          var zulu = arr[i].createdAt.split('T')[0] + ' ' + arr[i].createdAt.split('T')[1].split('.')[0] + ' UTC';
+          var time = new Date(zulu).toString().split('G')[0];
+          
           if (arr[i].roomname === roomName) {
             var msg = `
             <div class = 'msg'>
               <span class = 'userName'> 
                 ${safeFriend}: </span>
-                ${safeMsg}, ${arr[i].createdAt}
+                ${safeMsg} <span class = 'time'>${time}</span>
             </div>`;
             if (app.friends.includes(arr[i].username)) {
               msg = `
             <div class = 'msg'>
               <span class = 'friends'> 
                 ${safeFriend}: </span>
-                ${safeMsg}, ${arr[i].createdAt}
+                ${safeMsg} <span class = 'time'>Sent at: ${time}</span>
             </div>`;
 
               
             }
 
             
-              console.log(msg)
             $('.messageHolder').append(msg);
           }
         }
@@ -155,7 +168,7 @@ $( document ).ready(function() {
   });
   
   app.fetch('lobby');
-  console.log(app.currentRoom);
+  setInterval(function() {app.fetch(app.currentRoom);}, 3000);
  
 
 });
